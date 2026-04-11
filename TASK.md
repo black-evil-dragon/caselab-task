@@ -14,15 +14,20 @@ public class Book {
 	// ...
 }
 ```
-### API-эндпоинты
-В контроллере реализуй следующие пути:
+## API-эндпоинты
 
-| Метод   | Путь              | Описание                                      |
-| ------- | ----------------- | --------------------------------------------- |
-| **GET** | `/api/books`      | Вернуть список всех книг (JSON)               |
-| **GET** | `/api/books/{id}` | Найти книгу по ID и вернуть её                |
-| **GET** | `/api/books/{id}` | Если ID не найден — вернуть **404 Not Found** |
+Реализуй следующие пути:
 
+| Метод | Путь | Описание                                                   |
+|-------|------|------------------------------------------------------------|
+| POST | `/api/users` | создать пользователя                                       |
+| GET | `/api/users/{id}` | получить пользователя по ID                                |
+| POST | `/api/users/{userId}/tasks` | создать задачу для пользователя                            |
+| GET | `/api/users/{userId}/tasks` | получить все задачи пользователя (с пагинацией `Pageable`) |
+| PATCH | `/api/tasks/{taskId}` | отметить задачу выполненной                                |
+| DELETE | `/api/tasks/{taskId}` | удалить задачу (только если она принадлежит пользователю)  |
+
+---
 ### Подсказка контроллера в проекте
 ```java
 @GetMapping("/{id}")
@@ -34,40 +39,54 @@ public ResponseEntity<Book> getBookById(@PathVariable Long id) {
     return ResponseEntity.ok(book);
 }
 ```
-
-### Примеры ответов API
-```http
-GET /api/books
-[
-  {
-    "id": 1,
-    "title": "Война и мир",
-    "author": "Толстой",
-    "year": 1869
-  },
-  {
-    "id": 2,
-    "title": "Преступление и наказание",
-    "author": "Достоевский",
-    "year": 1866
-  }
-]
-```
+## Пример структуры ответа
 
 ```http
-GET /api/books/1
+GET /api/users/1
 {
   "id": 1,
-  "title": "Война и мир",
-  "author": "Толстой",
-  "year": 1869
+  "name": "Иван Петров",
+  "email": "ivan@example.com"
+}
+```
+```http
+GET /api/users/1/tasks?page=0&size=10
+{
+  "content": [
+    {
+      "id": 101,
+      "title": "Изучить JPA",
+      "completed": false,
+      "deadline": "2025-12-31T23:59:59"
+    }
+  ],
+  "pageable": {
+    "pageNumber": 0,
+    "pageSize": 10,
+    "sort": {
+      "empty": true,
+      "sorted": false,
+      "unsorted": true
+    },
+    "offset": 0,
+    "paged": true,
+    "unpaged": false
+  },
+  "totalPages": 1,
+  "totalElements": 1,
+  "last": true,
+  "size": 10,
+  "number": 0,
+  "sort": {
+    "empty": true,
+    "sorted": false,
+    "unsorted": true
+  },
+  "numberOfElements": 1,
+  "first": true,
+  "empty": false
 }
 
 ```
-
-### В процессе разработки сделай минимум 3 коммита
-Например (названия коммитов): `Добавленние апи путей в контроллере`, `разработка bookService`, `исправление ошибок `
-*\*Можно и на английском*
-
 ### Завершение работы.
 Отправь **Pull request** из своей ветки в ветку основного репозитория
